@@ -1,10 +1,12 @@
 {
-  "name": "petit_plat",
+  "name": "les-petits-plats",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "sass" : " sass --watch ./sass/main.scss:./css/main.css "
+    "sass": "sass --watch ./sass/main.scss:./css/style.css",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --max-warnings=0 ."
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,98 @@
+header .banner {
+  display: flex;
+  justify-content: center;
+}
+header .banner a {
+  text-decoration: none;
+}
+header .banner a img {
+  width: 3em;
+  margin-left: 4.6em;
+}
+header .banner a h1 {
+  font-size: 1.7em;
+  color: #d04f4f;
+}
+
+header .search-bar form {
+  background-color: #e7e7e7;
+  border-radius: 0.3em;
+  height: 3em;
+}
+header .search-bar form #research {
+  background-color: #e7e7e7;
+  width: 92%;
+  border: none;
+  padding-left: 0.5em;
+  font-size: 0.9em;
+  outline: none;
+}
+header .search-bar form .button {
+  border: none;
+  background-color: #e7e7e7;
+  margin-left: 1.5em;
+  margin-top: 0.7em;
+}
+header .search-bar form .button .fa-search {
+  font-size: 1.4em;
+}
+
+header .nav-dropdown-container button {
+  color: white;
+  border: transparent;
+  border-radius: 0.3em;
+  height: 3em;
+  width: 8em;
+  margin-top: 1em;
+}
+header .nav-dropdown-container button .fa-chevron-down {
+  margin-left: 1em;
+}
+header .nav-dropdown-ingredients button {
+  background-color: #3282f7;
+}
+header .nav-dropdown-appliances button {
+  background-color: #68d9a4;
+}
+header .nav-dropdown-utensils button {
+  background-color: #ed6454;
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3em;
+}
+main article {
+  max-width: 20em;
+  max-height: 20em;
+  background-color: #e7e7e7;
+  border-radius: 0.3em;
+  overflow: hidden;
+}
+main article .picture {
+  background-color: #c7bebe;
+  height: 10em;
+  border-radius: 0.3em 0.3em 0 0;
+}
+main article .name-and-time,
+main article .ingredients-and-description {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+}
+main article .name-and-time h2 {
+  font-size: 1.12em;
+  color: black;
+}
+main article .name-and-time p {
+  font-weight: bold;
+}
+main article .ingredients-and-description {
+  font-size: 0.7em;
+}
+main article .ingredients-and-description .ingredients {
+  padding-right: 1em;
+}
+
+/*# sourceMappingURL=style.css.map */
