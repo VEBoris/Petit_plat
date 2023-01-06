@@ -1,8 +1,11 @@
-// Base
-@import  " ./base" ;
+// // Base
+// @import  " ./base" ;
 
 // Utilitaires
-@import  " ./utils" ;
+@import "./utils/variables";
 
 // Dispositions
-@import  " ./layouts" ;
+@import "./layout/banner.scss";
+@import "./layout/search-bar.scss";
+@import "./layout/nav.scss";
+@import "./layout/cards-recipes";
