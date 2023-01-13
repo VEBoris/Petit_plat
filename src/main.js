@@ -1,4 +1,4 @@
-import { recipes } from "/data/recipes.js";
+import { recipes } from "./data/recipes.js";
 
 const ingredientsUl = document.getElementById("ingredients-list");
 const appareilsUl = document.getElementById("appareils-list");
