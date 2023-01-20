@@ -18,6 +18,10 @@ button {
   border: none;
 }
 
+.search-btn-icon {
+  background-color: $secondary;
+}
+
 header {
   width: 268px;
   display: flex;
@@ -34,4 +38,8 @@ header img {
 
 h1 {
   margin: 0;
+}
+
+ul {
+  list-style-type: none;
 }

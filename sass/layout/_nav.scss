@@ -10,7 +10,7 @@
 
 .advanced-search-btn {
   margin-right: 20px;
-  margin-top: 50px;
+  margin-top: 20px;
   border-radius: 5px;
   height: 69px;
 }
@@ -47,7 +47,7 @@
   transform: scale(0);
   position: absolute;
   z-index: 1;
-  top: 290px;
+  top: 330px;
   background-color: inherit;
   border-radius: 0 0 5px 5px;
   width: 667px;
@@ -68,6 +68,9 @@
 
 .input-tag {
   width: 100%;
+  height: 20px;
+  color: white;
+  outline: none;
 }
 
 .li-list {
@@ -76,4 +79,73 @@
   margin: 0;
   padding: 0;
   color: white;
+}
+
+.li-list li:hover {
+  transform: scaleX(1.1);
+}
+
+#search-tag {
+  display: flex;
+  margin-top: 20px;
+  height: 50px;
+}
+
+.tag {
+  padding-right: 5px;
+}
+
+.close-button{
+  cursor: pointer;
+}
+
+.li-list li {
+  margin: 10px
+}
+
+.ingredients-inlinetag,
+.appareils-inlinetag,
+.ustensils-inlinetag {
+  display: none;
+}
+
+.ingredients-inlinetag.active {
+  display: inline-flex;
+  background-color: $ingredient-color;
+  margin-left: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  width: auto;
+  color: white;
+}
+
+.appareils-inlinetag.active {
+  display: inline-flex;
+  background-color: $appliance-color;
+  margin-left: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  width: auto;
+  color: white;
+}
+
+.ustensils-inlinetag.active {
+  display: inline-flex;
+  background-color: $utensil-color;
+  margin-left: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  width: auto;
+  color: white;
+}
+
+.items-tag {
+  margin-right: 5px;
+}
+
+.item{
+  cursor: pointer;
 }
