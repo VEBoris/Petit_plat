@@ -26,49 +26,80 @@ async function displayRecipes(recipes) {
   });
 }
 
-ingredientsChevron.addEventListener('click', (e) => {
-  if (cssmodif[0].classList.contains('active')) {
-      closeList(cssmodif[0]);
-      ingredientsInput.placeholder = `Ingrédients`;
+// ingredientsChevron.addEventListener('click', (e) => {
+//   if (cssmodif[0].classList.contains('active')) {
+//       closeList(cssmodif[0]);
+//       ingredientsInput.placeholder = `Ingrédients`;
+//   } else {
+//       openList(cssmodif[0]);
+//       ingredientsInput.placeholder = `Rechercher un ingrédient`;
+//       closeList(cssmodif[1]);
+//       appareilsInput.placeholder = `Appareil`;
+//       closeList(cssmodif[2]);
+//       ustensilsInput.placeholder = `Ustensiles`;
+//   }
+// });
+
+
+// appareilsChevron.addEventListener('click', (e) => {
+//   if (cssmodif[1].classList.contains('active')) {
+//       closeList(cssmodif[1]);
+//       appareilsInput.placeholder = `Appareils`;
+//   } else {
+//       openList(cssmodif[1]);
+//       appareilsInput.placeholder = `Rechercher un appareil`;
+//       closeList(cssmodif[0]);
+//       ingredientsInput.placeholder = `Ingrédients`;
+//       closeList(cssmodif[2]);
+//       ustensilsInput.placeholder = `Ustensiles`;
+//   }
+// });
+
+// ustensilsChevron.addEventListener('click', (e) => {
+//   if (cssmodif[2].classList.contains('active')) {
+//       closeList(cssmodif[2]);
+//       ustensilsInput.placeholder = `Ustensiles`;
+//   } else {
+//       openList(cssmodif[2]);
+//       ustensilsInput.placeholder = `Rechercher un ustensile`;
+//       closeList(cssmodif[0]);
+//       ingredientsInput.placeholder = `Ingrédients`;
+//       closeList(cssmodif[1]);
+//       appareilsInput.placeholder = `Appareils`;
+//   }
+// });
+
+appareilsChevron.addEventListener("click", (e) => {chevron( 'appareil', "Appareils", 1);});
+ustensilsChevron.addEventListener("click", (e) => {chevron( 'ustensil', "Ustensils", 2);});
+ingredientsChevron.addEventListener("click", (e) => {chevron( 'ingrédiant', "Ingrédients", 0);});
+
+function closeList(cssmodif, input, nom) {
+  cssmodif.classList.remove('active');
+}
+function chevron(type, nom, index){
+  if ( cssmodif[index].classList.contains ('active')) {
+    closeList(cssmodif[index]);
+    input.placeholder = nom;
   } else {
-      openList(cssmodif[0]);
-      ingredientsInput.placeholder = `Rechercher un ingrédient`;
-      closeList(cssmodif[1]);
-      appareilsInput.placeholder = `Appareil`;
-      closeList(cssmodif[2]);
-      ustensilsInput.placeholder = `Ustensiles`;
+    openList(cssmodif[index]);
+    Input.placeholder = 'Rechercher un '+type;
+
+    switch (index) {
+      case 1:
+        closeList(cssmodif[0], ingredientsInput, "Ingrédient");
+        closeList(cssmodif[2], ustensilsInput, "Ustensiles");
+        break;
+      case 2:
+        closeList(cssmodif[0], ingredientsInput, "Ingrédient");
+        closeList(cssmodif[1], appareilsInput, "Appareils");
+        break;
+      case 0:
+        closeList(cssmodif[1], appareilsInput, "Appareils" );
+        closeList(cssmodif[2], ustensilsInput, "Ustensiles");
+        break;
+    }
   }
-});
-
-
-appareilsChevron.addEventListener('click', (e) => {
-  if (cssmodif[1].classList.contains('active')) {
-      closeList(cssmodif[1]);
-      appareilsInput.placeholder = `Appareils`;
-  } else {
-      openList(cssmodif[1]);
-      appareilsInput.placeholder = `Rechercher un appareil`;
-      closeList(cssmodif[0]);
-      ingredientsInput.placeholder = `Ingrédients`;
-      closeList(cssmodif[2]);
-      ustensilsInput.placeholder = `Ustensiles`;
-  }
-});
-
-ustensilsChevron.addEventListener('click', () => {
-
-  if (cssmodif[2].classList.contains('active')) {
-      closeList(cssmodif[2]);
-      ustensilsInput.placeholder = `Ustensiles`;
-  } else {
-      openList(cssmodif[2]);
-      ustensilsInput.placeholder = `Rechercher un ustensile`;
-      closeList(cssmodif[0]);
-      ingredientsInput.placeholder = `Ingrédients`;
-      closeList(cssmodif[1]);
-      appareilsInput.placeholder = `Appareils`;
-  }
-});
+}
 
 function displayIngredients(recipes) {
   let array = [];
@@ -85,24 +116,39 @@ function displayIngredients(recipes) {
 
       };
 
-  }
+  } 
   repetitionIngredients = ingredientsItem.filter((item, index) => ingredientsItem.indexOf(item) === index).sort();
   for (let l = 0; l < repetitionIngredients.length; l++) {
       ingredientsUl.innerHTML += `<li class="item ingredients-result" data-value='${repetitionIngredients[l]}'>${repetitionIngredients[l]}</li>`;
+      // const ingredientsLi = document.createElement( 'li' );
+      // ingredientsLi.classList.add('item');
+      // ingredientsLi.getAttribute('data-value');
+      // ingredientsLi.textContent = repetitionIngredients;
+      // ingredientsUl.append(ingredientsLi);
+      // ingredientsLi.append(repetitionIngredients[l]);
 
+      // return (ingredientsLi);
   }
 
 }
 
 function displayAppareils(recipes) {
-      let appareilsItems = [];
-      appareilsUl.innerHTML = '';
-      for (let i = 0; i < recipes.length; i++) {
-          appareilsItems.push(recipes[i].appliance.toLowerCase());
-      }
-      let repetitionAppareils = appareilsItems.filter((item, index) => appareilsItems.indexOf(item) === index).sort();
-      for (let j = 0; j < repetitionAppareils.length; j++) {
-          appareilsUl.innerHTML += `<li class="item appareils-result" data-value="${repetitionAppareils[j]}" >${repetitionAppareils[j]}</li>`;
+  let appareilsItems = [];
+  appareilsUl.innerHTML = '';
+  for (let i = 0; i < recipes.length; i++) {
+      appareilsItems.push(recipes[i].appliance.toLowerCase());
+  }
+  let repetitionAppareils = appareilsItems.filter((item, index) => appareilsItems.indexOf(item) === index).sort();
+  for (let j = 0; j < repetitionAppareils.length; j++) {
+      appareilsUl.innerHTML += `<li class="item appareils-result" data-value="${repetitionAppareils[j]}" >${repetitionAppareils[j]}</li>`;
+      // const appareilsLi = document.createElement( 'li' );
+      // appareilsLi.classList.add('item');
+      // appareilsLi.textContent = repetitionAppareils[j];
+      // appareilsLi.getAttribute
+      // appareilsUl.append(appareilsLi);
+      // appareilsLi.append(repetitionAppareils[j]);
+
+      // return (appareilsLi);
       }
   }
 
@@ -125,6 +171,12 @@ function displayUstensils(recipes) {
   let repetitionUstensils = ustensilsItem.filter((item, index) => ustensilsItem.indexOf(item) === index).sort();
   for (let l = 0; l < repetitionUstensils.length; l++) {
       ustensilsUl.innerHTML += `<li class="item ustensils-result" data-value='${repetitionUstensils[l]}'>${repetitionUstensils[l]}</li>`;
+      // const ustensilsLi = document.createElement( 'li' );
+      // ustensilsLi.classList.add('item');
+      // ustensilsLi.textContent = repetitionUstensils;
+      // ustensilsUl.append(repetitionUstensils[l]);
+
+      // return (ustensilsUl);
   }
 }
 
@@ -132,9 +184,9 @@ function openList(cssmodif) {
   cssmodif.classList.add('active');
 }
 
-function closeList(cssmodif) {
-  cssmodif.classList.remove('active');
-}
+// function closeList(cssmodif) {
+//   cssmodif.classList.remove('active');
+// }
 
 function updatemedia(items) {
   displayRecipes(items);
@@ -150,25 +202,29 @@ function updatemedia(items) {
 function addTagIngredient() {
   const ingredientsResult = document.querySelectorAll(".ingredients-result"); // Ingrédients de la liste
   for (let i = 0; i < ingredientsResult.length; i++) {
-      ingredientsResult[i].addEventListener("click", addIngredient, );
+      ingredientsResult[i].addEventListener("click", addIngredient);
   }
 }
 
 function addTagappareil() {
-  const appareilsResult = document.querySelectorAll(".appareils-result"); // Ingrédients de la liste
+  const appareilsResult = document.querySelectorAll(".appareils-result"); // Appareils de la liste
   for (let i = 0; i < appareilsResult.length; i++) {
       appareilsResult[i].addEventListener("click", addAppareil);
   }
 }
 
 function addTagustensil() {
-  const ustensilsResult = document.querySelectorAll(".ustensils-result"); // Ingrédients de la liste
+  const ustensilsResult = document.querySelectorAll(".ustensils-result"); // Ustensils de la liste
   for (let i = 0; i < ustensilsResult.length; i++) {
       ustensilsResult[i].addEventListener("click", addustensils);
   }
 }
 
 function addIngredient(ingredientEvent) {
+  const tags = document.querySelectorAll('.tag')
+      tags.forEach((tag) => {
+        if (tag.innerText === item.innerText) { item.classList.add('active') }
+      })
     let itemsSelected = ingredientEvent.target.innerText;
     const searchTag = document.querySelector('#search-tag');
     let tagContainer = document.createElement("div");
@@ -244,6 +300,40 @@ function addustensils(ustensilsEvent) {
   updatemedia(filterrecipes);
   ustensilsInput.placeholder = `Ustensils`;
 }
+
+// function addtaglist(appareilEvent, nom, type, index) {
+// let itemsSelected = appareilEvent.target.innerText;
+// const searchTag = document.querySelector( '#search-tag' );
+// let tagsContainer = document.createElement("div");
+// tagsContainer.innerHTML = '';
+// tagsContainer.classlist.add(type+"-inlinetag");
+// tagsContainer.classList.add("active");
+// tagsContainer.innerHTML ="<div class='items- + type+' tag'>$(items Selected}</div> <i class='fare fa-times-circle close-button'></i>" ;
+// searchTag. appendChild(tagsContainer);
+// closeList(cssmodif[index]);
+
+// tagArrayselected.push(itemsSelected);
+
+// const array = filterrecipes.lengin == [] ? recipes : filterrecipes;
+// filterrecipes = array.filter((recipe) => {
+//   switch (index) {
+//     case 1:
+//       return (uniformString(recipe.appliance).includes(itemsSelected));
+//       break;
+//     case 2:
+//       return (uniformString(recipe.ustencil).includes(itemsSelected));
+//       break;
+//     case 0:
+//       return (uniformString(recipe.ingredient).includes(itemsSelected));
+//       break;
+//   }
+// });
+// updatemedia(filterrecipes);
+// }
+
+// ustensilsResult[i].addEventListener("click", (e) =>{
+//   addustensils(e, "Ustensils", "ustensils", 2);
+// });
 
 function closeTag() {
   const closeTags = document.querySelectorAll('.close-button');
@@ -386,5 +476,6 @@ async function init() {
   addTagIngredient();
   addTagappareil();
   addTagustensil();
+  // addtaglist();
 }
 init();
