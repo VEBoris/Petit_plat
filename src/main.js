@@ -3,13 +3,13 @@ import { recipes } from "../../data/recipes.js";
 const ingredientsUl = document.getElementById("ingredients-list");
 const appareilsUl = document.getElementById("appareils-list");
 const ustensilsUl = document.getElementById("ustensiles-list");
+const ingredientsChevron = document.getElementById("ingredients-chevron");
 const appareilsChevron = document.getElementById("appareils-chevron");
 const ustensilsChevron = document.getElementById("ustensiles-chevron");
-const ingredientsChevron = document.getElementById("ingredients-chevron");
 const cssmodif = document.querySelectorAll(".advanced-search-btn");
+const ingredientsInput = document.getElementById('ingredients');
 const appareilsInput = document.getElementById('appareils');
 const ustensilsInput = document.getElementById('ustensiles');
-const ingredientsInput = document.getElementById('ingredients');
 const recipesSection = document.querySelector('#recipes-container');
 let tagArrayselected = [];
 let repetitionIngredients = [];
@@ -26,65 +26,26 @@ async function displayRecipes(recipes) {
   });
 }
 
-// ingredientsChevron.addEventListener('click', (e) => {
-//   if (cssmodif[0].classList.contains('active')) {
-//       closeList(cssmodif[0]);
-//       ingredientsInput.placeholder = `Ingrédients`;
-//   } else {
-//       openList(cssmodif[0]);
-//       ingredientsInput.placeholder = `Rechercher un ingrédient`;
-//       closeList(cssmodif[1]);
-//       appareilsInput.placeholder = `Appareil`;
-//       closeList(cssmodif[2]);
-//       ustensilsInput.placeholder = `Ustensiles`;
-//   }
-// });
-
-
-// appareilsChevron.addEventListener('click', (e) => {
-//   if (cssmodif[1].classList.contains('active')) {
-//       closeList(cssmodif[1]);
-//       appareilsInput.placeholder = `Appareils`;
-//   } else {
-//       openList(cssmodif[1]);
-//       appareilsInput.placeholder = `Rechercher un appareil`;
-//       closeList(cssmodif[0]);
-//       ingredientsInput.placeholder = `Ingrédients`;
-//       closeList(cssmodif[2]);
-//       ustensilsInput.placeholder = `Ustensiles`;
-//   }
-// });
-
-// ustensilsChevron.addEventListener('click', (e) => {
-//   if (cssmodif[2].classList.contains('active')) {
-//       closeList(cssmodif[2]);
-//       ustensilsInput.placeholder = `Ustensiles`;
-//   } else {
-//       openList(cssmodif[2]);
-//       ustensilsInput.placeholder = `Rechercher un ustensile`;
-//       closeList(cssmodif[0]);
-//       ingredientsInput.placeholder = `Ingrédients`;
-//       closeList(cssmodif[1]);
-//       appareilsInput.placeholder = `Appareils`;
-//   }
-// });
-
-appareilsChevron.addEventListener("click", (e) => {chevron( 'appareil', "Appareils", 1);});
-ustensilsChevron.addEventListener("click", (e) => {chevron( 'ustensil', "Ustensils", 2);});
-ingredientsChevron.addEventListener("click", (e) => {chevron( 'ingrédiant', "Ingrédients", 0);});
+ingredientsChevron.addEventListener("click", (e) => {chevron( 'ingrédient', "Ingrédients", 0, ingredientsInput);});
+appareilsChevron.addEventListener("click", (e) => {chevron( 'appareil', "Appareils", 1, appareilsInput);});
+ustensilsChevron.addEventListener("click", (e) => {chevron( 'ustensil', "Ustensils", 2, ustensilsInput);});
 
 function closeList(cssmodif, input, nom) {
   cssmodif.classList.remove('active');
+  input.placeholder = nom;
 }
-function chevron(type, nom, index){
+function chevron(type, nom, index, input){
   if ( cssmodif[index].classList.contains ('active')) {
-    closeList(cssmodif[index]);
-    input.placeholder = nom;
+    closeList(cssmodif[index], input, nom);
   } else {
     openList(cssmodif[index]);
-    Input.placeholder = 'Rechercher un '+type;
+    input.placeholder = 'Rechercher un '+type;
 
     switch (index) {
+      case 0:
+        closeList(cssmodif[1], appareilsInput, "Appareils" );
+        closeList(cssmodif[2], ustensilsInput, "Ustensiles");
+        break;
       case 1:
         closeList(cssmodif[0], ingredientsInput, "Ingrédient");
         closeList(cssmodif[2], ustensilsInput, "Ustensiles");
@@ -92,10 +53,6 @@ function chevron(type, nom, index){
       case 2:
         closeList(cssmodif[0], ingredientsInput, "Ingrédient");
         closeList(cssmodif[1], appareilsInput, "Appareils");
-        break;
-      case 0:
-        closeList(cssmodif[1], appareilsInput, "Appareils" );
-        closeList(cssmodif[2], ustensilsInput, "Ustensiles");
         break;
     }
   }
@@ -111,8 +68,8 @@ function displayIngredients(recipes) {
 
   for (let el in array) {
       for (let j = 0; j < array[el].length; j++) {
-          let items = array[el][j].ingredient;
-          ingredientsItem.push(items.toLowerCase());
+        let items = array[el][j].ingredient;
+        ingredientsItem.push(items.toLowerCase());
 
       };
 
@@ -120,37 +77,20 @@ function displayIngredients(recipes) {
   repetitionIngredients = ingredientsItem.filter((item, index) => ingredientsItem.indexOf(item) === index).sort();
   for (let l = 0; l < repetitionIngredients.length; l++) {
       ingredientsUl.innerHTML += `<li class="item ingredients-result" data-value='${repetitionIngredients[l]}'>${repetitionIngredients[l]}</li>`;
-      // const ingredientsLi = document.createElement( 'li' );
-      // ingredientsLi.classList.add('item');
-      // ingredientsLi.getAttribute('data-value');
-      // ingredientsLi.textContent = repetitionIngredients;
-      // ingredientsUl.append(ingredientsLi);
-      // ingredientsLi.append(repetitionIngredients[l]);
-
-      // return (ingredientsLi);
   }
-
 }
 
 function displayAppareils(recipes) {
   let appareilsItems = [];
   appareilsUl.innerHTML = '';
   for (let i = 0; i < recipes.length; i++) {
-      appareilsItems.push(recipes[i].appliance.toLowerCase());
+    appareilsItems.push(recipes[i].appliance.toLowerCase());
   }
   let repetitionAppareils = appareilsItems.filter((item, index) => appareilsItems.indexOf(item) === index).sort();
   for (let j = 0; j < repetitionAppareils.length; j++) {
-      appareilsUl.innerHTML += `<li class="item appareils-result" data-value="${repetitionAppareils[j]}" >${repetitionAppareils[j]}</li>`;
-      // const appareilsLi = document.createElement( 'li' );
-      // appareilsLi.classList.add('item');
-      // appareilsLi.textContent = repetitionAppareils[j];
-      // appareilsLi.getAttribute
-      // appareilsUl.append(appareilsLi);
-      // appareilsLi.append(repetitionAppareils[j]);
-
-      // return (appareilsLi);
-      }
+    appareilsUl.innerHTML += `<li class="item appareils-result" data-value="${repetitionAppareils[j]}" >${repetitionAppareils[j]}</li>`;
   }
+}
 
 function displayUstensils(recipes) {
   let array = [];
@@ -170,23 +110,13 @@ function displayUstensils(recipes) {
 
   let repetitionUstensils = ustensilsItem.filter((item, index) => ustensilsItem.indexOf(item) === index).sort();
   for (let l = 0; l < repetitionUstensils.length; l++) {
-      ustensilsUl.innerHTML += `<li class="item ustensils-result" data-value='${repetitionUstensils[l]}'>${repetitionUstensils[l]}</li>`;
-      // const ustensilsLi = document.createElement( 'li' );
-      // ustensilsLi.classList.add('item');
-      // ustensilsLi.textContent = repetitionUstensils;
-      // ustensilsUl.append(repetitionUstensils[l]);
-
-      // return (ustensilsUl);
+    ustensilsUl.innerHTML += `<li class="item ustensils-result" data-value='${repetitionUstensils[l]}'>${repetitionUstensils[l]}</li>`;
   }
 }
 
 function openList(cssmodif) {
   cssmodif.classList.add('active');
 }
-
-// function closeList(cssmodif) {
-//   cssmodif.classList.remove('active');
-// }
 
 function updatemedia(items) {
   displayRecipes(items);
@@ -202,138 +132,59 @@ function updatemedia(items) {
 function addTagIngredient() {
   const ingredientsResult = document.querySelectorAll(".ingredients-result"); // Ingrédients de la liste
   for (let i = 0; i < ingredientsResult.length; i++) {
-      ingredientsResult[i].addEventListener("click", addIngredient);
+    ingredientsResult[i].addEventListener("click", (e) => {
+      addtaglist(e, "Ingrédients", "ingredients", 0, ingredientsInput);
+    });
   }
 }
 
 function addTagappareil() {
   const appareilsResult = document.querySelectorAll(".appareils-result"); // Appareils de la liste
   for (let i = 0; i < appareilsResult.length; i++) {
-      appareilsResult[i].addEventListener("click", addAppareil);
+    appareilsResult[i].addEventListener("click", (e) => {
+      addtaglist(e, "Appareils", "appareils", 1, appareilsInput);
+    });
   }
 }
 
 function addTagustensil() {
   const ustensilsResult = document.querySelectorAll(".ustensils-result"); // Ustensils de la liste
   for (let i = 0; i < ustensilsResult.length; i++) {
-      ustensilsResult[i].addEventListener("click", addustensils);
+    ustensilsResult[i].addEventListener("click", (e) => {
+      addtaglist(e, "Ustensils", "ustensils", 2, ustensilsInput);
+    });
   }
 }
 
-function addIngredient(ingredientEvent) {
-  const tags = document.querySelectorAll('.tag')
-      tags.forEach((tag) => {
-        if (tag.innerText === item.innerText) { item.classList.add('active') }
-      })
-    let itemsSelected = ingredientEvent.target.innerText;
-    const searchTag = document.querySelector('#search-tag');
-    let tagContainer = document.createElement("div");
-    tagContainer.innerHTML = '';
-    tagContainer.classList.add("ingredients-inlinetag");
-    tagContainer.classList.add("active");
-    tagContainer.innerHTML = `<div class='items-ingredients tag'>${itemsSelected}</div> <i class="far fa-times-circle close-button"></i>`;
-    searchTag.appendChild(tagContainer);
-    closeList(cssmodif[0]);
+function addtaglist(event, nom, type, index, input) {
+let itemsSelected = event.target.innerText;
+const searchTag = document.querySelector( '#search-tag' );
+let tagsContainer = document.createElement("div");
+tagsContainer.innerHTML = '';
+tagsContainer.classList.add(""+type+"-inlinetag");
+tagsContainer.classList.add("active");
+tagsContainer.innerHTML =`<div class='items-${type}' tag'>${itemsSelected}</div> <i class='far fa-times-circle close-button'></i>` ;
+searchTag. appendChild(tagsContainer);
+closeList(cssmodif[index], input, nom);
 
-    tagArrayselected.push(itemsSelected);
-    const array = filterrecipes.length == 0 ? recipes : filterrecipes;
+tagArrayselected.push(itemsSelected);
 
-    filterrecipes = array.filter((recipe) => {
-
-        return (recipe.ingredients.some((el) =>
-            uniformString(el.ingredient).includes(itemsSelected)
-        ));
-    });
-
-
-    updatemedia(filterrecipes);
-
-    ingredientsInput.placeholder = `Ingrédients`;
+const array = filterrecipes.length == 0 ? recipes : filterrecipes;
+filterrecipes = array.filter((recipe) => {
+  switch (index) {
+    case 0:
+       return(recipe.ingredients.some((el) => el.ingredient.includes(itemsSelected)));
+      break;
+    case 1:
+       return(recipe.appliance).includes(itemsSelected);
+      break;
+    case 2:
+      return (recipe.ustensils.some((el) => el.includes(itemsSelected)));
+      break;
+  }
+});
+updatemedia(filterrecipes);
 }
-
-function addAppareil(appareilEvent) {
-  let itemsSelected = appareilEvent.target.innerText;
-  const searchTag = document.querySelector('#search-tag');
-  let tagsContainer = document.createElement("div");
-  tagsContainer.innerHTML = '';
-  tagsContainer.classList.add("appareils-inlinetag");
-  tagsContainer.classList.add("active");
-  tagsContainer.innerHTML = `<div class='items-appareils tag'>${itemsSelected}</div> <i class="far fa-times-circle close-button"></i>`;
-  searchTag.appendChild(tagsContainer);
-  closeList(cssmodif[1]);
-
-  tagArrayselected.push(itemsSelected);
-
-  const array = filterrecipes.length == 0 ? recipes : filterrecipes;
-
-  filterrecipes = array.filter((recipe) => {
-
-      return (uniformString(recipe.appliance).includes(itemsSelected));
-
-  });
-  updatemedia(filterrecipes);
-  appareilsInput.placeholder = `Appareils`;
-}
-
-function addustensils(ustensilsEvent) {
-  let itemsSelected = ustensilsEvent.target.innerText;
-  const searchTag = document.querySelector('#search-tag');
-  let tagsContainers = document.createElement("div");
-  tagsContainers.innerHTML = '';
-  tagsContainers.classList.add("ustensils-inlinetag");
-  tagsContainers.classList.add("active");
-  tagsContainers.innerHTML = `<div class='items-ustensils tag'>${itemsSelected}</div> <i class="far fa-times-circle close-button"></i>`;
-  searchTag.appendChild(tagsContainers);
-  closeList(cssmodif[2]);
-
-  tagArrayselected.push(itemsSelected);
-
-  const array = filterrecipes.length == 0 ? recipes : filterrecipes;
-
-  filterrecipes = array.filter((recipe) => {
-
-      return (recipe.ustensils.some((el) =>
-          uniformString(el).includes(itemsSelected)
-      ));
-
-  });
-  updatemedia(filterrecipes);
-  ustensilsInput.placeholder = `Ustensils`;
-}
-
-// function addtaglist(appareilEvent, nom, type, index) {
-// let itemsSelected = appareilEvent.target.innerText;
-// const searchTag = document.querySelector( '#search-tag' );
-// let tagsContainer = document.createElement("div");
-// tagsContainer.innerHTML = '';
-// tagsContainer.classlist.add(type+"-inlinetag");
-// tagsContainer.classList.add("active");
-// tagsContainer.innerHTML ="<div class='items- + type+' tag'>$(items Selected}</div> <i class='fare fa-times-circle close-button'></i>" ;
-// searchTag. appendChild(tagsContainer);
-// closeList(cssmodif[index]);
-
-// tagArrayselected.push(itemsSelected);
-
-// const array = filterrecipes.lengin == [] ? recipes : filterrecipes;
-// filterrecipes = array.filter((recipe) => {
-//   switch (index) {
-//     case 1:
-//       return (uniformString(recipe.appliance).includes(itemsSelected));
-//       break;
-//     case 2:
-//       return (uniformString(recipe.ustencil).includes(itemsSelected));
-//       break;
-//     case 0:
-//       return (uniformString(recipe.ingredient).includes(itemsSelected));
-//       break;
-//   }
-// });
-// updatemedia(filterrecipes);
-// }
-
-// ustensilsResult[i].addEventListener("click", (e) =>{
-//   addustensils(e, "Ustensils", "ustensils", 2);
-// });
 
 function closeTag() {
   const closeTags = document.querySelectorAll('.close-button');
@@ -347,7 +198,6 @@ function RemoveClassActive(button) {
   let btnclose = button.target;
   btnclose.parentElement.classList.remove('active');
   let item = btnclose.previousElementSibling.innerHTML;
-  let itemsing = document.querySelectorAll('.tag');
   tagArrayselected = tagArrayselected.filter((tag) => tag != item);
   let array = filterrecipes.length !== 0 ? recipes : newfilterrecipes;
   if (tagArrayselected.length == 0) {
@@ -476,6 +326,5 @@ async function init() {
   addTagIngredient();
   addTagappareil();
   addTagustensil();
-  // addtaglist();
 }
 init();
