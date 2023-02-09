@@ -209,7 +209,9 @@ ul {
   color: white;
 }
 
-.items-tag {
+.items-ingredients,
+.items-appareils,
+.items-ustensils {
   margin-right: 5px;
 }
 
