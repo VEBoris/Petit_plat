@@ -10,6 +10,7 @@ const cssmodif = document.querySelectorAll(".advanced-search-btn");
 const ingredientsInput = document.getElementById('ingredients');
 const appareilsInput = document.getElementById('appareils');
 const ustensilsInput = document.getElementById('ustensiles');
+const mainSearchinput = document.getElementById('main-search')
 const recipesSection = document.querySelector('#recipes-container');
 let tagArrayselected = [];
 let repetitionIngredients = [];
@@ -300,6 +301,47 @@ function searchUstensils() {
   });
 }
 
+//Algo 2
+function searchMainBar() {
+  mainSearchinput.addEventListener('keyup', (e) => {
+      let filteredGlobal = [];
+      const searchString = uniformString(e.target.value.toLowerCase());
+      if (searchString.length >= 3) {
+          if (tagArrayselected.length != 0) {
+              filteredGlobal = filterrecipes.filter((recipe) => {
+                  return (uniformString(recipe.name).toLowerCase().includes(searchString) || uniformString(recipe.description).toLowerCase().includes(searchString) ||
+                      recipe.ingredients.some((el) => uniformString(el.ingredient).includes(searchString)));
+              });
+              updatemedia(filteredGlobal);
+              displayRecipes(filteredGlobal);
+          }
+          if (tagArrayselected.length === 0) {
+              // console.time();
+
+              filteredGlobal = recipes.filter((recipe) => {
+                  return (uniformString(recipe.name).toLowerCase().includes(searchString) || uniformString(recipe.description).toLowerCase().includes(searchString) ||
+                      recipe.ingredients.some((el) => uniformString(el.ingredient).includes(searchString)));
+              });
+
+              // console.timeEnd();
+
+              updatemedia(filteredGlobal);
+              displayRecipes(filteredGlobal);
+          } else {
+              recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
+          }
+          if (filteredGlobal.length === 0) {
+              recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
+          }
+      } else {
+          if (searchString.length === 0 && tagArrayselected.length === 0) {
+              updatemedia(recipes);
+              displayRecipes(recipes);
+          }
+      }
+  });
+}
+
 function uniformString(string) {
   string = string
       .normalize("NFC")
@@ -326,5 +368,6 @@ async function init() {
   addTagIngredient();
   addTagappareil();
   addTagustensil();
+  searchMainBar();
 }
 init();
