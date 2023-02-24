@@ -12,9 +12,7 @@ const appareilsInput = document.getElementById('appareils');
 const ustensilsInput = document.getElementById('ustensiles');
 const mainSearchinput = document.getElementById('main-search');
 const recipesSection = document.querySelector('#recipes-container');
-let tagArrayselected = [];
 let filterrecipes = [];
-let newfilterrecipes = [];
 
 async function displayRecipes(recipes) {
   recipesSection.innerHTML = '';
@@ -148,8 +146,7 @@ closeList(cssmodif[index], input, nom);
 
 tagArrayselected.push(itemsSelected);
 
-const array = filterrecipes.length == 0 ? recipes : filterrecipes;
-filterrecipes = array.filter((recipe) => {
+filterrecipes = filterrecipes.filter((recipe) => {
   switch (index) {
     case 0:
        return(recipe.ingredients.some((el) => el.ingredient.toLowerCase().includes(itemsSelected)));
@@ -177,56 +174,26 @@ function closeTag() {
 function removeClassActive(button) {
   let btnclose = button.target;
   btnclose.parentElement.classList.remove('active');
-  let item = btnclose.previousElementSibling.innerHTML;
-  tagArrayselected = tagArrayselected.filter((tag) => tag != item);
-  let array = filterrecipes.length !== 0 ? recipes : newfilterrecipes;
-  if (tagArrayselected.length == 0) {
-    array = recipes;
-    filterrecipes = [];
-}
-let tagcurrentingredient = btnclose.parentElement.classList.contains('ingredients-inlinetag');
-let tagcurrentappareils = btnclose.parentElement.classList.contains('appareils-inlinetag');
-let tagcurrentustensils = btnclose.parentElement.classList.contains('ustensils-inlinetag');
 
-if (tagcurrentingredient) {
-    newfilterrecipes = array.filter((recipe) => {
-        return (
-            recipe.ingredients.some((el) =>
-                uniformString(el.ingredient).includes(tagArrayselected)
-            ) || uniformString(recipe.appliance).includes(tagArrayselected)) || (recipe.ustensils.some((el) =>
-            uniformString(el).includes(tagArrayselected)
-        ));
-    });
-    updatemedia(newfilterrecipes);
-    displayRecipes(newfilterrecipes);
-} 
-else if (tagcurrentappareils) {
-  newfilterrecipes = array.filter((recipe) => {
-      return (uniformString(recipe.appliance).includes(tagArrayselected) || (recipe.ustensils.some((el) =>
-              uniformString(el).includes(tagArrayselected)
-          )) ||
-          recipe.ingredients.some((el) =>
-              uniformString(el.ingredient).includes(tagArrayselected)
-          ));
-  });
-  updatemedia(newfilterrecipes);
-  displayRecipes(newfilterrecipes)
-} 
-else if (tagcurrentustensils) {
-  newfilterrecipes = array.filter((recipe) => {
-      return ((recipe.ustensils.some((el) =>
-              uniformString(el).includes(tagArrayselected)
-          )) || uniformString(recipe.appliance).includes(tagArrayselected) ||
-          recipe.ingredients.some((el) =>
-              uniformString(el.ingredient).includes(tagArrayselected)
-          ));
-  });
-  updatemedia(newfilterrecipes);
-  displayRecipes(newfilterrecipes)
-} 
-else {
-  console.log("error");
+searchTag();
+
+updatemedia(filterrecipes);
+displayRecipes(filterrecipes)
 }
+
+function searchTag() {
+  let tagIngredient = document.getElementsByClassName ('items-ingredients');
+  let tagAppareil = document.getElementsByClassName ('items-appareils');
+  let tagUstencil = document.getElementsByClassName ('items-ustencils');
+
+  filterrecipes = array.filter((recipe) => {
+    return (uniformString(recipe.appliance).includes(tagAppareil) || (recipe.ustensils.some((el) =>
+            uniformString(el).includes(tagUstencil)
+              )) ||
+              recipe.ingredients.some((el) =>
+                  uniformString(el.ingredient).includes(tagIngredient)
+              ));
+      });
 }
 
 function searchIngredient() {
