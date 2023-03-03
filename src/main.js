@@ -14,6 +14,7 @@ const mainSearchinput = document.getElementById('main-search');
 const recipesSection = document.querySelector('#recipes-container');
 let filterrecipes = [];
 
+//function for displaying all the recipes
 async function displayRecipes(recipes) {
   recipesSection.innerHTML = '';
   recipes.forEach((item) => {
@@ -28,10 +29,13 @@ ingredientsChevron.addEventListener("click", (e) => {chevron( 'ingrédient', "In
 appareilsChevron.addEventListener("click", (e) => {chevron( 'appareil', "Appareils", 1, appareilsInput);});
 ustensilsChevron.addEventListener("click", (e) => {chevron( 'ustensil', "Ustensils", 2, ustensilsInput);});
 
+//funtion for closing list of ingrédient, appliance and ustencil
 function closeList(cssmodif, input, nom) {
   cssmodif.classList.remove('active');
   input.placeholder = nom;
 }
+
+//function for unfolding list of ingrédient, appliance and ustencil with the chevron
 function chevron(type, nom, index, input){
   if ( cssmodif[index].classList.contains ('active')) {
     closeList(cssmodif[index], input, nom);
@@ -56,6 +60,7 @@ function chevron(type, nom, index, input){
   }
 }
 
+//function for displaying the ingredients in his list and for removing repetition in the list
 function displayIngredients(recipes) {
   let ingredientsItem = [];
   ingredientsUl.innerHTML = "";
@@ -68,6 +73,7 @@ function displayIngredients(recipes) {
   }
 }
 
+//function for displaying the appliances in his list and for removing repetition in the list
 function displayAppareils(recipes) {
   let appareilsItems = [];
   appareilsUl.innerHTML = '';
@@ -80,6 +86,7 @@ function displayAppareils(recipes) {
   }
 }
 
+//function for displaying the ustencils in his list and for removing repetition in the list
 function displayUstensils(recipes) {
   let ustensilsItem = [];
   ustensilsUl.innerHTML = '';
@@ -106,6 +113,7 @@ function updatemedia(items) {
   closeTag();
 }
 
+//funtion for finding the selected data value for ingredients
 function addTagIngredient() {
   const ingredientsResult = document.querySelectorAll(".ingredients-result"); // Ingrédients de la liste
   for (let i = 0; i < ingredientsResult.length; i++) {
@@ -115,6 +123,7 @@ function addTagIngredient() {
   }
 }
 
+//funtion for finding the selected data value for appliances
 function addTagappareil() {
   const appareilsResult = document.querySelectorAll(".appareils-result"); // Appareils de la liste
   for (let i = 0; i < appareilsResult.length; i++) {
@@ -124,6 +133,7 @@ function addTagappareil() {
   }
 }
 
+//funtion for finding the selected data value for ustensils
 function addTagustensil() {
   const ustensilsResult = document.querySelectorAll(".ustensils-result"); // Ustensils de la liste
   for (let i = 0; i < ustensilsResult.length; i++) {
@@ -133,18 +143,16 @@ function addTagustensil() {
   }
 }
 
+//function for adding & filtering tags
 function addtaglist(event, nom, type, index, input) {
 let itemsSelected = event.target.innerText;
 const searchTag = document.querySelector( '#search-tag' );
 let tagsContainer = document.createElement("div");
-tagsContainer.innerHTML = '';
 tagsContainer.classList.add(""+type+"-inlinetag");
 tagsContainer.classList.add("active");
-tagsContainer.innerHTML =`<div class='items-${type}' tag'>${itemsSelected}</div> <i class='far fa-times-circle close-button'></i>` ;
-searchTag. appendChild(tagsContainer);
+tagsContainer.innerHTML =`<div class='items-${type} tag'>${itemsSelected}</div> <i class='far fa-times-circle close-button'></i>` ;
+searchTag.appendChild(tagsContainer);
 closeList(cssmodif[index], input, nom);
-
-tagArrayselected.push(itemsSelected);
 
 filterrecipes = filterrecipes.filter((recipe) => {
   switch (index) {
@@ -163,39 +171,53 @@ filterrecipes = filterrecipes.filter((recipe) => {
   displayRecipes(filterrecipes)
 }
 
+//function for closing the tags and re-filtering
 function closeTag() {
   const closeTags = document.querySelectorAll('.close-button');
   for (let i = 0; i < closeTags.length; i++) {
       const element = closeTags[i];
-      element.addEventListener('click', removeClassActive);
+      element.addEventListener('click', removeClassActive, searchTags);
   }
 }
 
+//funtion for re-filtering when closing tags (with tags and search bar)
 function removeClassActive(button) {
   let btnclose = button.target;
-  btnclose.parentElement.classList.remove('active');
+  btnclose.parentElement.remove();
+  filterrecipes = recipes;
 
-searchTag();
-
+searchTags();
+searchMainBar();
 updatemedia(filterrecipes);
 displayRecipes(filterrecipes)
 }
 
-function searchTag() {
+//function for multiple selected tags
+function searchTags() {
   let tagIngredient = document.getElementsByClassName ('items-ingredients');
   let tagAppareil = document.getElementsByClassName ('items-appareils');
-  let tagUstencil = document.getElementsByClassName ('items-ustencils');
+  let tagUstensil = document.getElementsByClassName ('items-ustensils');
+  let tagIngredientSelected = document.querySelector ('.items-ingredients');
+  let tagAppareilSelected = document.querySelector ('.items-appareils');
+  let tagUstensilSelected = document.querySelector ('.items-ustensils');
 
-  filterrecipes = array.filter((recipe) => {
-    return (uniformString(recipe.appliance).includes(tagAppareil) || (recipe.ustensils.some((el) =>
-            uniformString(el).includes(tagUstencil)
-              )) ||
-              recipe.ingredients.some((el) =>
-                  uniformString(el.ingredient).includes(tagIngredient)
-              ));
+  filterrecipes = filterrecipes.filter((recipe) => {
+      if ( tagIngredient.length > 0 && tagAppareil.length == 0 && tagUstensil.length == 0) {
+        return (recipe.ingredients.some((el) => uniformString(el.ingredient).includes(tagIngredientSelected.textContent)));
+      }
+      else if (tagAppareil.length > 0 && tagIngredient.length == 0 && tagUstensil.length == 0) {
+        return (recipe.appliance).includes(tagAppareilSelected.textContent);
+      }
+      else if (tagUstensil.length > 0 && tagIngredient.length == 0 && tagAppareil.length == 0) {
+        return (recipe.ustensils.some((el) => uniformString(el).includes(tagUstensilSelected.textContent)));
+      }
+      else if (tagUstensil.length == 0 && tagIngredient.length == 0 && tagAppareil.length == 0) {
+        return filterrecipes.filter
+      }
       });
 }
 
+//function for searching ingredients in the list
 function searchIngredient() {
   ingredientsInput.addEventListener('keyup', (e) => {
       openList(cssmodif[0]);
@@ -213,6 +235,7 @@ function searchIngredient() {
   });
 }
 
+//function for searching aplliances in the list
 function searchAppareils() {
   appareilsInput.addEventListener('keyup', (e) => {
       openList(cssmodif[1]);
@@ -229,6 +252,7 @@ function searchAppareils() {
   });
 }
 
+//function for searching ustencils in the list
 function searchUstensils() {
   ustensilsInput.addEventListener('keyup', (e) => {
       openList(cssmodif[2]);
@@ -246,135 +270,18 @@ function searchUstensils() {
   });
 }
 
-// ingredientsInput.addEventListener("keyup", (e) => {searchItem( 'ingrédient', "Ingrédients", 0, ingredientsInput);});
-// appareilsInput.addEventListener("keyup", (e) => {searchItem( 'appareil', "Appareils", 1, appareilsInput);});
-// ustensilsInput.addEventListener("keyup", (e) => {searchItem( 'ustensil', "Ustensils", 2, ustensilsInput);});
-
-// function searchItem(event, type, nom, index, input) {
-//     openList(cssmodif[index]);
-//     input.placeholder = `Rechercher un`+type;
-//     let itemString = uniformString(event.target.value.toLowerCase());
-//     const array = filterrecipes.length == 0 ? recipes : filterrecipes;
-//     if (itemString.length >= 3) {
-//       filterrecipes = array.filter((recipe) => {
-//         switch (index) {
-//           case 0:
-//              return (recipe.ingredients.some((el) => uniformString(el.ingredient).includes(ingredientsString)));
-//             break;
-//           case 1:
-//             return (uniformString(recipe.appliance).includes(appareilsString));
-//             break;
-//           case 2:
-//             return ((recipe.ustensils.some((el) => uniformString(el).includes(ustensilsString)
-//             break;
-//         }
-//       });
-//       updatemedia(filterrecipes);
-//       input.placeholder = nom;
-//     }
-// }
-
-//Algo 2
+//Algo 2 for searching in the main bar
 function searchMainBar() {
-  mainSearchinput.addEventListener('keyup', (e) => {
-      let filterSearchBar = [];
-      const searchString = uniformString(e.target.value.toLowerCase());
+      const searchString = uniformString(mainSearchinput.value.toLowerCase());
       if (searchString.length >= 3) {
-          if (tagArrayselected.length != 0) {
-              filterSearchBar = filterrecipes.filter((recipe) => {
-                  return (uniformString(recipe.name).toLowerCase().includes(searchString) || uniformString(recipe.description).toLowerCase().includes(searchString) ||
-                      recipe.ingredients.some((el) => uniformString(el.ingredient).includes(searchString)));
-              });
-              updatemedia(filterSearchBar);
-              displayRecipes(filterSearchBar);
-          }
-          if (tagArrayselected.length === 0) {
-              filterSearchBar = recipes.filter((recipe) => {
-                  return (uniformString(recipe.name).toLowerCase().includes(searchString) || uniformString(recipe.description).toLowerCase().includes(searchString) ||
-                      recipe.ingredients.some((el) => uniformString(el.ingredient).includes(searchString)));
-              });
-              updatemedia(filterSearchBar);
-              displayRecipes(filterSearchBar);
-              console.log(filterSearchBar);
-            }
-          if (filterSearchBar.length === 0) {
-              recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
-          }
+        filterrecipes = filterrecipes.filter((recipe) => {
+      return (uniformString(recipe.name).toLowerCase().includes(searchString) || uniformString(recipe.description).toLowerCase().includes(searchString) ||
+        recipe.ingredients.some((el) => uniformString(el.ingredient).includes(searchString)));
+        });
       }
-      else {
-          if (searchString.length < 3 && tagArrayselected.length != 0) {
-            updatemedia(filterrecipes)
-            displayRecipes(filterrecipes)
-          } else if (searchString.length === 0 && tagArrayselected.length === 0) {
-              updatemedia(recipes);
-              displayRecipes(recipes);
-          }
-      }
-  });
 }
 
-//Algo 1
-// function searchMainBar() {
-//   mainSearchinput.addEventListener('keyup', (e) => {
-//       let filterSearchBar = [];
-//       const searchString = uniformString(e.target.value.toLowerCase());
-//       if (searchString.length >= 3) {
-//           if (tagArrayselected.length === 0) {
-//             for (let i = 0; i < recipes.length; i++) {
-//                   const { name, ingredients, description } = recipes[i];
-//                   const namerecipe = uniformString(name).toLowerCase().includes(searchString);
-//                   const descriptionrecipe = uniformString(description).toLowerCase().includes(searchString);
-//                   let ingredientrecipe = false;
-//                   for (let y = 0; y < ingredients.length; y++) {
-//                       if (uniformString(ingredients[y].ingredient).toLowerCase().includes(searchString)) {
-//                           ingredientrecipe = true;
-//                       }
-//                   }
-//                   if (namerecipe || descriptionrecipe || ingredientrecipe) {
-//                       filterSearchBar.push(recipes[i]);
-//                   } else {
-//                       recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
-//                   }
-//               }
-//               updatemedia(filterSearchBar);
-//               displayRecipes(filterSearchBar);
-//           }
-//           if (tagArrayselected.length != 0) {
-//             for (let i = 0; i < filterrecipes.length; i++) {
-//                   const { name, ingredients, description } = filterrecipes[i];
-//                   const namerecipe = uniformString(name).toLowerCase().includes(searchString);
-//                   const descriptionrecipe = uniformString(description).toLowerCase().includes(searchString);
-//                   let ingredientrecipe = false;
-//                   for (let y = 0; y < ingredients.length; y++) {
-//                       if (uniformString(ingredients[y].ingredient).toLowerCase().includes(searchString)) {
-//                           ingredientrecipe = true;
-//                       }
-//                   }
-//                   if (namerecipe || descriptionrecipe || ingredientrecipe) {
-//                       filterSearchBar.push(filterrecipes[i]);
-//                   } else {
-//                       recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
-//                   }
-//               }
-//               updatemedia(filterSearchBar);
-//               displayRecipes(filterSearchBar);
-//           }
-//           if (filterSearchBar.length === 0) {
-//               recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
-//           }
-//       } else {
-//         if (searchString.length < 3 && tagArrayselected.length != 0) {
-//           updatemedia(filterrecipes)
-//           displayRecipes(filterrecipes)
-//         } else if (searchString.length === 0 && tagArrayselected.length === 0) {
-//           updatemedia(recipes);
-//           displayRecipes(recipes);
-//         }
-//       }
-//   });
-// }
-
-
+//function for facilitating the wtitting in the search bar
 function uniformString(string) {
   string = string
       .normalize("NFC")
@@ -391,6 +298,7 @@ function uniformString(string) {
 }
 
 async function init() {
+  filterrecipes = recipes;
   displayRecipes(recipes);
   displayAppareils(recipes);
   displayUstensils(recipes);
@@ -398,10 +306,17 @@ async function init() {
   searchIngredient();
   searchAppareils();
   searchUstensils();
-  // searchItem();
   addTagIngredient();
   addTagappareil();
   addTagustensil();
-  searchMainBar();
+  mainSearchinput.addEventListener('keyup', (e) => {
+    if (e.key == 'Backspace') {
+      filterrecipes = recipes
+      searchTags();
+    }
+    searchMainBar();
+    displayRecipes(filterrecipes);
+    updatemedia(filterrecipes);
+  });
 }
 init();
