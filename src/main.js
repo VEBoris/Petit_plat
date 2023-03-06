@@ -231,7 +231,9 @@ function searchIngredient() {
           updatemedia(filterrecipes);
           ingredientsInput.placeholder = `Ingrédients`;
       }
-
+      else {
+        updatemedia(recipes)
+      }
   });
 }
 
@@ -248,6 +250,9 @@ function searchAppareils() {
           });
           updatemedia(filterrecipes);
           appareilsInput.placeholder = `Appareils`;
+      }
+      else {
+        updatemedia(recipes)
       }
   });
 }
@@ -266,6 +271,9 @@ function searchUstensils() {
           });
           updatemedia(filterrecipes);
           ustensilsInput.placeholder = `Ustensils`;
+      }
+      else {
+        updatemedia(recipes)
       }
   });
 }
