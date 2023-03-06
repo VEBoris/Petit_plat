@@ -13,6 +13,7 @@ const ustensilsInput = document.getElementById('ustensiles');
 const mainSearchinput = document.getElementById('main-search');
 const recipesSection = document.querySelector('#recipes-container');
 let filterrecipes = [];
+let filterSearchBar = [];
 
 //function for displaying all the recipes
 async function displayRecipes(recipes) {
@@ -60,7 +61,7 @@ function chevron(type, nom, index, input){
   }
 }
 
-//function for displaying the ingredients in his list and for removing repetition in the list
+//function for displaying ingredients in his list and for removing repetition in the list
 function displayIngredients(recipes) {
   let ingredientsItem = [];
   ingredientsUl.innerHTML = "";
@@ -73,7 +74,7 @@ function displayIngredients(recipes) {
   }
 }
 
-//function for displaying the appliances in his list and for removing repetition in the list
+//function for displaying appliances in his list and for removing repetition in the list
 function displayAppareils(recipes) {
   let appareilsItems = [];
   appareilsUl.innerHTML = '';
@@ -86,7 +87,7 @@ function displayAppareils(recipes) {
   }
 }
 
-//function for displaying the ustencils in his list and for removing repetition in the list
+//function for displaying ustencils in his list and for removing repetition in the list
 function displayUstensils(recipes) {
   let ustensilsItem = [];
   ustensilsUl.innerHTML = '';
@@ -99,10 +100,12 @@ function displayUstensils(recipes) {
   }
 }
 
+//function for adding the class "active" to the tag and adding in the search tag
 function openList(cssmodif) {
   cssmodif.classList.add('active');
 }
 
+//function for updating media
 function updatemedia(items) {
   displayIngredients(items);
   displayAppareils(items);
@@ -184,7 +187,12 @@ function closeTag() {
 function removeClassActive(button) {
   let btnclose = button.target;
   btnclose.parentElement.remove();
-  filterrecipes = recipes;
+  if (filterSearchBar.length != 0){
+    filterrecipes = filterSearchBar;
+  }
+  else {
+    filterrecipes = recipes;
+  }
 
 searchTags();
 searchMainBar();
@@ -212,7 +220,7 @@ function searchTags() {
         return (recipe.ustensils.some((el) => uniformString(el).includes(tagUstensilSelected.textContent)));
       }
       else if (tagUstensil.length == 0 && tagIngredient.length == 0 && tagAppareil.length == 0) {
-        return filterrecipes.filter
+        return filterrecipes.filter;
       }
       });
 }
@@ -231,7 +239,9 @@ function searchIngredient() {
           updatemedia(filterrecipes);
           ingredientsInput.placeholder = `Ingrédients`;
       }
-
+      else {
+        updatemedia(recipes)
+      }
   });
 }
 
@@ -243,11 +253,14 @@ function searchAppareils() {
       let appareilsString = uniformString(e.target.value.toLowerCase());
       const array = filterrecipes.length == 0 ? recipes : filterrecipes;
       if (appareilsString.length >= 3) {
-          filterrecipes = array.filter((recipe) => {
-              return (uniformString(recipe.appliance).includes(appareilsString));
-          });
-          updatemedia(filterrecipes);
-          appareilsInput.placeholder = `Appareils`;
+        filterrecipes = array.filter((recipe) => {
+          return (uniformString(recipe.appliance).includes(appareilsString));
+        });
+        updatemedia(filterrecipes);
+        appareilsInput.placeholder = `Appareils`;
+      }
+      else {
+        updatemedia(recipes)
       }
   });
 }
@@ -267,12 +280,14 @@ function searchUstensils() {
           updatemedia(filterrecipes);
           ustensilsInput.placeholder = `Ustensils`;
       }
+      else {
+        updatemedia(recipes)
+      }
   });
 }
 
 //Algo 1 for searching in the main bar
 function searchMainBar() {
-  let filterSearchBar = [];
   const searchString = uniformString(mainSearchinput.value.toLowerCase());
   if (searchString.length >= 3) {
     for (let i = 0; i < recipes.length; i++) {
@@ -287,15 +302,19 @@ function searchMainBar() {
       }
       if (namerecipe || descriptionrecipe || ingredientrecipe) {
         filterSearchBar.push(recipes[i]);
-        console.log(recipes[i])
-      }
-      else if (filterSearchBar.length === 0) {
-        recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
       }
     }
     updatemedia(filterSearchBar);
     displayRecipes(filterSearchBar);
-    console.log(filterSearchBar);
+    console.log(filterSearchBar)
+    console.log(filterSearchBar.length)
+  }
+  else {
+    if (searchString.length >= 3 && filterSearchBar.length == 0) {
+      recipesSection.innerHTML = `Aucune recette ne correspond à votre critère... Vous pouvez chercher  « tarte aux pommes », « poisson », etc.`;
+      updatemedia(filterrecipes);
+      displayRecipes(filterrecipes);
+    }
   }
 }
 
@@ -316,7 +335,7 @@ function uniformString(string) {
 }
 
 async function init() {
-  filterrecipes = recipes;
+  filterrecipes = filterSearchBar
   displayRecipes(recipes);
   displayAppareils(recipes);
   displayUstensils(recipes);
@@ -331,11 +350,10 @@ async function init() {
     if (e.key == 'Backspace') {
       filterrecipes = recipes
       searchTags();
+      displayRecipes(filterrecipes)
+      updatemedia(filterrecipes)
     }
     searchMainBar();
-    displayRecipes(filterrecipes);
-    updatemedia(filterrecipes);
-    console.log(filterrecipes);
   });
 }
 init();
