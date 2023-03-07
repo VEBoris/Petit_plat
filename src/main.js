@@ -99,10 +99,12 @@ function displayUstensils(recipes) {
   }
 }
 
+//function for adding the class "active" to the tag and adding in the search tag
 function openList(cssmodif) {
   cssmodif.classList.add('active');
 }
 
+//function for updating media
 function updatemedia(items) {
   displayIngredients(items);
   displayAppareils(items);
@@ -280,6 +282,7 @@ function searchUstensils() {
 
 //Algo 2 for searching in the main bar
 function searchMainBar() {
+  console.time()
       const searchString = uniformString(mainSearchinput.value.toLowerCase());
       if (searchString.length >= 3) {
         filterrecipes = filterrecipes.filter((recipe) => {
@@ -287,6 +290,7 @@ function searchMainBar() {
         recipe.ingredients.some((el) => uniformString(el.ingredient).includes(searchString)));
         });
       }
+      console.timeEnd();
 }
 
 //function for facilitating the wtitting in the search bar
