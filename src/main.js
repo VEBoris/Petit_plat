@@ -306,8 +306,6 @@ function searchMainBar() {
     }
     updatemedia(filterSearchBar);
     displayRecipes(filterSearchBar);
-    console.log(filterSearchBar)
-    console.log(filterSearchBar.length)
   }
   else {
     if (searchString.length >= 3 && filterSearchBar.length == 0) {
