@@ -99,10 +99,12 @@ function displayUstensils(recipes) {
   }
 }
 
+//function for adding the class "active" to the tag and adding in the search tag
 function openList(cssmodif) {
   cssmodif.classList.add('active');
 }
 
+//function for updating media
 function updatemedia(items) {
   displayIngredients(items);
   displayAppareils(items);
